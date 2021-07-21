@@ -18,3 +18,9 @@ notifications:
       - kirshaav@yandex.ru
     on_success: never # default: change
     on_failure: always # default: always
+
+env:
+
+  global:
+
+    - CODECOV_TOKEN="5cea93c6-5fce-49cf-b0b0-7a887b34196e"
