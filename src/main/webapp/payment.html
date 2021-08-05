@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+</head>
+<body>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+<div class="container">
+    <div class="row pt-3">
+        <h3>
+            Вы выбрали ряд 1 место 1, Сумма : 500 рублей.
+        </h3>
+    </div>
+    <div class="row">
+        <form>
+            <div class="form-group">
+                <label for="username">ФИО</label>
+                <input type="text" class="form-control" id="username" placeholder="ФИО">
+            </div>
+            <div class="form-group">
+                <label for="phone">Номер телефона</label>
+                <input type="text" class="form-control" id="phone" placeholder="Номер телефона">
+            </div>
+            <button type="button" class="btn btn-success" onclick="accountSave()">Оплатить</button>
+        </form>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+            const search = (new URL(document.location)).searchParams;
+            document.querySelector('h3').innerText =
+                `Вы выбрали ряд ${search.get('row')}, место ${search.get('column')}. Сумма: 500 рублей.`;
+        }
+    );
+
+
+    function ticketSave(account_in) {
+        const search = (new URL(document.location)).searchParams;
+        let row = search.get('row');
+        let cell = search.get('column')
+
+        const ticket = {
+            row : row,
+            cell : cell,
+            account_id : Number(account_in)
+        }
+        $.ajax({
+            type: 'POST',
+            crossdomain: true,
+            url: 'http://localhost:8080/cinema/ticket',
+            data: JSON.stringify(ticket),
+        }).done(function (data) {
+            if (data === "success") {
+                alert('Билет куплен');
+            } else {
+                alert('Что-то пошло не так ...tic');
+            }
+            window.location.href = 'http://localhost:8080/cinema/index.html';
+        }).fail(function (err) {
+            alert(err);
+        })
+    }
+
+    function accountSave() {
+        let username = $('#username').val();
+        let phone = $('#phone').val();
+        const account = {
+            username: username,
+            phone: phone
+        }
+        var result = 0;
+        $.ajax({
+            type: 'POST',
+            crossdomain: true,
+            url: 'http://localhost:8080/cinema/account',
+            data: JSON.stringify(account),
+            success: function (data) {
+                if (data > 0) {
+                    result = Number(data.toString());
+                    ticketSave(result);
+                } else {
+                    alert('Что-то пошло не так ...acc');
+                }
+                window.location.href = 'http://localhost:8080/cinema/index.html';
+            }
+        });
+
+    }
+
+</script>
+</body>
+</html>

@@ -23,4 +23,5 @@ env:
 
   global:
 
-    - CODECOV_TOKEN="5cea93c6-5fce-49cf-b0b0-7a887b34196e"
+    #- CODECOV_TOKEN="5cea93c6-5fce-49cf-b0b0-7a887b34196e"
+    - CODECOV_TOKEN='5cea93c6-5fce-49cf-b0b0-7a887b34196e'
