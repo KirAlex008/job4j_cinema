@@ -4,13 +4,13 @@ public class Ticket {
     private int id;
     private int row;
     private int cell;
-    private int account_id;
+    private int accountId;
 
-    public Ticket(int id, int row, int cell, int account_id) {
+    public Ticket(int id, int row, int cell, int accountId) {
         this.id = id;
         this.row = row;
         this.cell = cell;
-        this.account_id = account_id;
+        this.accountId = accountId;
     }
 
     public int getId() {
@@ -37,21 +37,11 @@ public class Ticket {
         this.cell = cell;
     }
 
-    public int getAccount_id() {
-        return account_id;
+    public int getAccountId() {
+        return accountId;
     }
 
-    public void setAccount_id(int account_id) {
-        this.account_id = account_id;
-    }
-
-    @Override
-    public String toString() {
-        return "Ticket{" +
-                "id=" + id +
-                ", row=" + row +
-                ", cell=" + cell +
-                ", account_id=" + account_id +
-                '}';
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
     }
 }

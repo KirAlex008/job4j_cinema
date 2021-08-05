@@ -16,7 +16,7 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 
-public class AccountSaveServlet extends HttpServlet{
+public class AccountSaveServlet extends HttpServlet {
 
     private static final Gson GSON = new GsonBuilder().create();
 

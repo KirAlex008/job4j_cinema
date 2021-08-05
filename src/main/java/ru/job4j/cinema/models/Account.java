@@ -40,12 +40,4 @@ public class Account {
         this.phone = phone;
     }
 
-    @Override
-    public String toString() {
-        return "Account{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", phone='" + phone + '\'' +
-                '}';
-    }
 }

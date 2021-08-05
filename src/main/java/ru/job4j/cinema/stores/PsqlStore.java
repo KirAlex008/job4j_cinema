@@ -98,7 +98,7 @@ public class PsqlStore implements Store {
         ) {
             ps.setInt(1, ticket.getRow());
             ps.setInt(2, ticket.getCell());
-            ps.setInt(3, ticket.getAccount_id());
+            ps.setInt(3, ticket.getAccountId());
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
                 if (id.next()) {

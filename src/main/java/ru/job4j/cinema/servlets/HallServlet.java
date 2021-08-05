@@ -22,8 +22,8 @@ public class HallServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)throws ServletException, IOException {
-        Collection <Ticket> hall = PsqlStore.instOf().findAllTickets();
-        for (var el : hall ) {
+        Collection<Ticket> hall = PsqlStore.instOf().findAllTickets();
+        for (var el : hall) {
             System.out.println(el.toString());
         }
         resp.setContentType("application/json; charset=utf-8");
