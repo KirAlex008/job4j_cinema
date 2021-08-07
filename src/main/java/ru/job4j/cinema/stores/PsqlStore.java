@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -55,7 +56,7 @@ public class PsqlStore implements Store {
     public Collection<Ticket> findAllTickets() {
         List<Ticket> tickets = new ArrayList<>();
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM ticket")
+             PreparedStatement ps = cn.prepareStatement("SELECT * FROM ticket")
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
@@ -72,7 +73,7 @@ public class PsqlStore implements Store {
     public int createAccount(Account account) {
         int rsl = -1;
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("INSERT INTO account (username, phone) VALUES (?, ?)", PreparedStatement.RETURN_GENERATED_KEYS)
+             PreparedStatement ps = cn.prepareStatement("INSERT INTO account (username, phone) VALUES (?, ?)", PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
             ps.setString(1, account.getUsername());
             ps.setString(2, account.getPhone());
@@ -90,8 +91,8 @@ public class PsqlStore implements Store {
         return rsl;
     }
 
-    @Override
-    public boolean createTicket(Ticket ticket) {
+    /*@Override
+    public boolean createTicket(Ticket ticket)  {
         boolean rsl = false;
         try (Connection cn = pool.getConnection();
              PreparedStatement ps =  cn.prepareStatement("INSERT INTO ticket (row, cell, account_id ) VALUES (?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS)
@@ -106,17 +107,17 @@ public class PsqlStore implements Store {
                     rsl = true;
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             LOG.error("Connection is not correct", e);
         }
         return rsl;
-    }
+    }*/
 
     @Override
     public Account findAccountById(int id) {
         Account account = null;
         try (Connection cn = pool.getConnection();
-            PreparedStatement st = cn.prepareStatement("SELECT * FROM account where id=?")) {
+             PreparedStatement st = cn.prepareStatement("SELECT * FROM account where id=?")) {
             st.setInt(1, id);
             try (ResultSet it = st.executeQuery()) {
                 if (it.next()) {
@@ -146,5 +147,30 @@ public class PsqlStore implements Store {
         return ticket;
     }
 
-
+    @Override
+    public boolean createTicket(Ticket ticket) {
+        boolean rsl = false;
+        try (Connection cn = pool.getConnection()) {
+            try (PreparedStatement ps = cn.prepareStatement("INSERT INTO ticket (row, cell, account_id ) VALUES (?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS)
+            ) {
+                ps.setInt(1, ticket.getRow());
+                ps.setInt(2, ticket.getCell());
+                ps.setInt(3, ticket.getAccountId());
+                ps.execute();
+                try (ResultSet id = ps.getGeneratedKeys()) {
+                    if (id.next()) {
+                        ticket.setId(id.getInt(1));
+                        rsl = true;
+                    }
+                }
+            } catch (SQLException e) {
+                LOG.error("Ticket is already to sell, try again", e);
+            } finally {
+                rsl = false;
+            }
+        } catch (SQLException e) {
+            LOG.error("Connection is not correct", e);
+        }
+        return rsl;
+    }
 }

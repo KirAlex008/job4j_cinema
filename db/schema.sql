@@ -1,8 +1,8 @@
 CREATE TABLE account (
                          id SERIAL PRIMARY KEY,
                          username VARCHAR NOT NULL,
-                         phone VARCHAR NOT NULL UNIQUE,
-                         email VARCHAR NOT NULL UNIQUE
+                         phone VARCHAR NOT NULL UNIQUE
+                         --email VARCHAR NOT NULL UNIQUE
 );
 
 CREATE TABLE ticket (
@@ -10,6 +10,6 @@ CREATE TABLE ticket (
                         row INT NOT NULL,
                         cell INT NOT NULL,
                         account_id INT NOT NULL REFERENCES account(id),
-                        session_id INT NOT NULL,
-                        unique (session_id, row, cell)
+                        --session_id INT NOT NULL,
+                        unique (row, cell)
 );

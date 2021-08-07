@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 import java.util.Collection;
 
 public class TicketSaveServlet extends HttpServlet {
@@ -25,7 +26,12 @@ public class TicketSaveServlet extends HttpServlet {
         Ticket ticket = GSON.fromJson(req.getReader(), Ticket.class);
         System.out.println(ticket.toString() + "Chek");
         req.setCharacterEncoding("UTF-8");
-        String response = PsqlStore.instOf().createTicket(ticket) ? "success" : "fail";
+        String response = null;
+        try {
+            response = PsqlStore.instOf().createTicket(ticket) ? "success" : "fail";
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         resp.getWriter().print(response);
     }
 }
